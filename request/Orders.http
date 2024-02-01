@@ -1,0 +1,58 @@
+GET http://localhost:4004/odata/v4/manage-orders/GetOrders
+
+GET http://localhost:4004/odata/v4/manage-orders/GetOrders('client1@client1.com')
+
+
+POST  http://localhost:4004/odata/v4/manage-orders/GetOrders
+Content-Type: application/json
+
+{
+        "ClientEmail" : "client5@client5.com",
+        "FirstName"   : "jean",
+        "LastName"    : "flores alvarez",
+        "CreateOn"    : "2024-10-10",
+        "Reviewed"    : true,
+        "Approved"    : true
+}
+
+PUT  http://localhost:4004/odata/v4/manage-orders/GetOrders('client1@client1.com')
+Content-Type: application/json
+
+{
+        "FirstName"   : "jean",
+        "LastName"    : "flores alvarez"
+}
+
+DELETE   http://localhost:4004/odata/v4/manage-orders/GetOrders('client1@client1.com')
+Content-Type: application/json
+
+
+#GET customer rate - function
+
+GET    http://localhost:4004/odata/v4/manage-orders/getClientTaxRate(ClientEmail='client1@client1.com')
+
+
+# Action
+POST    http://localhost:4004/odata/v4/manage-orders/cancelOrder
+Content-Type: application/json
+
+{
+        "ClientEmail":"client2@client2.com"
+}
+
+
+
+#GET customer Rate - function bound
+GET    http://localhost:4004/odata/v4/manage-orders/GetOrders(ClientEmail='client1@client1.com')/ManageOrders.getClientTaxRate(ClientEmail='client1@client1.com')
+
+
+#POST customer Rate - actions bound
+POST    http://localhost:4004/odata/v4/manage-orders/GetOrders(ClientEmail='client1@client1.com')/ManageOrders.cancelOrder
+Content-Type: application/json
+
+{
+        "ClientEmail":"client2@client2.com"
+}
+
+GET http://localhost:4004/odata/v4/sap-backend-exit/Incidents 
+
