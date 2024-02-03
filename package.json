@@ -17,9 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express-graphql": "^0.12.0",
-    "graphql": "^16.8.1"
-  },
-  "devDependencies": {
+    "graphql": "^16.8.1",
     "@cap-js/sqlite": "^1",
     "cds-swagger-ui-express": "^0.8.0",
     "@sap/cds-dk": "^7",
@@ -31,7 +29,9 @@
   "cds": {
     "requires": {
       "db": {
-        "kind": "hana"
+        "kind": "hana",
+        "impl": "@sap/cds-hana",
+        "deploy-format": "hdbtable"
       },
       "sapbackend": {
         "kind": "odata-v2",
@@ -48,6 +48,9 @@
             "destination": "NPL_Backend"
           }
         }
+      },
+      "[hybrid]": {
+        "db": "hana"
       }
     },
     "i18n": {

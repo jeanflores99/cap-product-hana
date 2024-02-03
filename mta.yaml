@@ -24,6 +24,7 @@ modules:
     requires:
       - name: cap-products-db
       - name: cap-products-messaging
+      - name: cap-products-destination
 
   - name: cap-products-db-deployer
     type: hdb
@@ -45,3 +46,8 @@ resources:
       service: enterprise-messaging
       service-plan: default
       path: ./event-mesh.json
+  - name: cap-products-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
