@@ -40,4 +40,5 @@ module.exports = async (srv) => {
     }
     return incident;
   });
+
 };

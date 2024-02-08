@@ -1,53 +1,66 @@
-_schema-version: '3.1'
+_schema-version: "3.1"
 ID: cap-products
+description: A simple CAP project.
 version: 1.0.0
-description: "A simple CAP project."
+modules:
+- name: cap-products-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: cap-products-db
+  - name: cap-products-messaging
+  - name: cap-products-destination
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+  build-parameters:
+    builder: npm
+- name: cap-products-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: cap-products-db
+    properties:
+      TARGET_CONTAINER: ~{hdi-container-name}
+  - name: cross-container-service-1
+    group: SERVICE_REPLACEMENTS
+    properties:
+      key: ServiceName_1
+      service: ~{the-service-name}
+  parameters:
+    buildpack: nodejs_buildpack
+resources:
+- name: cap-products-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+  properties:
+    hdi-container-name: ${service-name}
+- name: cap-products-messaging
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./event-mesh.json
+    service: enterprise-messaging
+    service-plan: default
+- name: cap-products-destination
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: destination
+    service-plan: lite
+- name: cross-container-service-1
+  type: org.cloudfoundry.existing-service
+  parameters:
+    service-name: cap-products-db
+  properties:
+    the-service-name: ${service-name}
 parameters:
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npx cds build --production
-modules:
-  - name: cap-products-srv
-    type: nodejs
-    path: gen/srv
-    parameters:
-      buildpack: nodejs_buildpack
-    build-parameters:
-      builder: npm
-    provides:
-      - name: srv-api # required by consumers of CAP services (e.g. approuter)
-        properties:
-          srv-url: ${default-url}
-    requires:
-      - name: cap-products-db
-      - name: cap-products-messaging
-      - name: cap-products-destination
-
-  - name: cap-products-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: cap-products-db
-
-resources:
-  - name: cap-products-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
-  - name: cap-products-messaging
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: enterprise-messaging
-      service-plan: default
-      path: ./event-mesh.json
-  - name: cap-products-destination
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: destination
-      service-plan: lite
+  - builder: custom
+    commands:
+    - npx cds build --production
