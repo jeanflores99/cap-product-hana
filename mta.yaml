@@ -8,8 +8,6 @@ modules:
   path: gen/srv
   requires:
   - name: cap-products-db
-  - name: cap-products-messaging
-  - name: cap-products-destination
   provides:
   - name: srv-api
     properties:
@@ -25,11 +23,6 @@ modules:
   - name: cap-products-db
     properties:
       TARGET_CONTAINER: ~{hdi-container-name}
-  - name: cross-container-service-1
-    group: SERVICE_REPLACEMENTS
-    properties:
-      key: ServiceName_1
-      service: ~{the-service-name}
   parameters:
     buildpack: nodejs_buildpack
 resources:
@@ -40,23 +33,6 @@ resources:
     service-plan: hdi-shared
   properties:
     hdi-container-name: ${service-name}
-- name: cap-products-messaging
-  type: org.cloudfoundry.managed-service
-  parameters:
-    path: ./event-mesh.json
-    service: enterprise-messaging
-    service-plan: default
-- name: cap-products-destination
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: destination
-    service-plan: lite
-- name: cross-container-service-1
-  type: org.cloudfoundry.existing-service
-  parameters:
-    service-name: cap-products-db
-  properties:
-    the-service-name: ${service-name}
 parameters:
   enable-parallel-deployments: true
 build-parameters:
